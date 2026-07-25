@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-java-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-json-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-json-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-manager-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-manager-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-os-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-os-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-remote-driver-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-remote-driver-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-safari-driver-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-safari-driver-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-support-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-support-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-common-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-extension-autoconfigure-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-extension-autoconfigure-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-extension-autoconfigure-spi-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-extension-autoconfigure-spi-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-logs-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-logs-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-metrics-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-metrics-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-trace-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-trace-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-api-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-api-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-chrome-driver-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-chrome-driver-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-chromium-driver-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-chromium-driver-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-devtools-v146-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-devtools-v146-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-devtools-v147-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-devtools-v147-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-devtools-v148-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-devtools-v148-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-edge-driver-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-edge-driver-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-firefox-driver-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-firefox-driver-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-http-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-http-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-ie-driver-4.44.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-ie-driver-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/selenium-java-4.44.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/auto-service-annotations-1.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/auto-service-annotations-1.1.1-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/byte-buddy-1.18.8-jdk5.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/byte-buddy-1.18.8-jdk5-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/error_prone_annotations-2.5.1.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/error_prone_annotations-2.5.1-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/failureaccess-1.0.3.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/failureaccess-1.0.3-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/guava-33.6.0-jre.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/guava-33.6.0-jre-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/j2objc-annotations-2.8.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/j2objc-annotations-2.8-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/jspecify-1.0.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/jspecify-1.0.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-api-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-api-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-common-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-common-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-context-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-context-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-exporter-logging-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-exporter-logging-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-1.62.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-1.62.0-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/kasif/Downloads/selenium-java-4.44.0/opentelemetry-sdk-common-1.62.0-sources.jar"/>
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
