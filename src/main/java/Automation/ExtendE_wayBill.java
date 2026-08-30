@@ -17,7 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class ExtendE_wayBill {
+public class ExtendE_wayBillTest {
 
     public static void main(String[] args) throws Exception {
 
