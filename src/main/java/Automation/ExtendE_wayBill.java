@@ -37,9 +37,9 @@ public class ExtendE_wayBill {
         try {
             fis = new FileInputStream(path);
             workbook = new XSSFWorkbook(fis);
-            System.out.println("[INFO] Excel file loaded successfully.");
+            System.out.println("[VERIFY] Excel file loaded successfully.");
         } catch (Exception e) {
-            System.err.println("CRITICAL ERROR: Make sure 'AutoExtendFile.xlsx' is CLOSED in Excel before running!");
+            System.err.println("[FAIL] CRITICAL ERROR: Make sure 'AutoExtendFile.xlsx' is CLOSED in Excel before running!");
             throw e;
         } finally {
             if (fis != null) fis.close();
@@ -61,40 +61,53 @@ public class ExtendE_wayBill {
             System.out.println("[INFO] Launching browser and opening login page...");
             driver.get("https://ewaybillgst.gov.in/MainMenu.aspx");
 
-            // ================= LOGIN =================
-            driver.findElement(By.id("txt_username")).sendKeys("Shadowfax_cen#SUB4");
-            driver.findElement(By.id("txt_password")).sendKeys("Ewaybill#1122");
+            // ================= LOGIN & FORM ELEMENT VALIDATION =================
+            WebElement userTxt = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("txt_username")));
+            verifyElement(userTxt, "Username Field");
+            userTxt.sendKeys("Shadowfax_cen#SUB4");
 
-            System.out.println("[ACTION REQUIRED] Enter CAPTCHA manually");
-            driver.findElement(By.name("txtCaptcha")).click();
+            WebElement passTxt = driver.findElement(By.id("txt_password"));
+            verifyElement(passTxt, "Password Field");
+            passTxt.sendKeys("Ewaybill#1122");
 
+            WebElement captchaBox = driver.findElement(By.name("txtCaptcha"));
+            verifyElement(captchaBox, "Captcha Textbox");
+            captchaBox.click();
+
+            System.out.println("[ACTION REQUIRED] Enter CAPTCHA manually within 10 seconds...");
             Thread.sleep(10000); // Wait for manual Captcha entry
 
-            driver.findElement(By.name("btnLogin")).click();
-            System.out.println("[INFO] Login button clicked.");
+            WebElement loginBtn = driver.findElement(By.name("btnLogin"));
+            verifyElement(loginBtn, "Login Button");
+            loginBtn.click();
+            System.out.println("[VERIFY] Login button clicked successfully.");
 
-            // ALERT HANDLE
+            // ALERT HANDLE POST LOGIN
             try {
                 Thread.sleep(1500);
                 Alert alert = driver.switchTo().alert();
-                System.out.println("[ALERT] Login message: " + alert.getText());
+                System.out.println("[ALERT] Login message popup: " + alert.getText());
                 alert.accept();
             } catch (Exception e) {
                 System.out.println("[INFO] No Alert presented after login");
             }
 
-            WebElement checkbox = driver.findElement(By.id("rbOtpshow"));
+            WebElement checkbox = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("rbOtpshow")));
+            verifyElement(checkbox, "OTP Visible Checkbox");
             if (!checkbox.isSelected()) {
                 checkbox.click();
             }
-            System.out.println("[INFO] OTP Visible checkbox ticked");
 
-            driver.findElement(By.name("OtpTxt")).click();
-            System.out.println("[ACTION REQUIRED] Enter OTP manually");
+            WebElement otpField = driver.findElement(By.name("OtpTxt"));
+            verifyElement(otpField, "OTP Input Field");
+            otpField.click();
+            System.out.println("[ACTION REQUIRED] Enter OTP manually within 10 seconds...");
             Thread.sleep(10000); // Wait for manual OTP entry
 
-            driver.findElement(By.name("btnsubmit")).click();
-            System.out.println("[INFO] Login Completed");
+            WebElement submitOtpBtn = driver.findElement(By.name("btnsubmit"));
+            verifyElement(submitOtpBtn, "OTP Submit Button");
+            submitOtpBtn.click();
+            System.out.println("[VERIFY] Login Completed & Dashboard Reached.");
 
             // ================= PROCESSING LOOP =================
 
@@ -103,7 +116,6 @@ public class ExtendE_wayBill {
                 XSSFRow row = sheet.getRow(i);
                 if (row == null) continue;
 
-                // Column 0: E-Way Bill Number | Column 1: Remark Output
                 String ewayBill = formatter.formatCellValue(row.getCell(0));
 
                 XSSFCell remarkCell = row.getCell(1);
@@ -116,51 +128,78 @@ public class ExtendE_wayBill {
                 System.out.println("--------------------------------------------------");
                 System.out.println("[ROW " + i + "] Processing E-Way Bill: " + ewayBill);
 
-                // Scraped attributes initialized
                 String extractedCity = "";
                 String extractedPincode = "";
                 String extractedVehicleNo = "";
 
                 try {
-                    // ================= STEP 1: OPEN PRINT PAGE & SCRAPE DETAILS =================
+                    // ================= STEP 1: OPEN PRINT PAGE & VERIFY VALIDITY =================
                     driver.get("https://ewaybillgst.gov.in/MainMenu.aspx");
                     Thread.sleep(1000);
 
-                    clickMenuOption(driver, wait, js, "Print EWB");
-                    Thread.sleep(500);
+                    boolean menuClicked = clickMenuOption(driver, wait, js, "Print EWB");
+                    if (!menuClicked) {
+                        throw new RuntimeException("Failed to click 'Print EWB' menu item.");
+                    }
 
-                    // Enter E-Way Bill Number on Print Page
                     WebElement printInput = wait.until(
                             ExpectedConditions.visibilityOfElementLocated(By.id("ctl00_ContentPlaceHolder1_txt_ebillno"))
                     );
+                    verifyElement(printInput, "Print EWB Number Input");
                     printInput.clear();
                     printInput.sendKeys(ewayBill);
 
-                    // Click GO
                     WebElement goBtn = wait.until(
                             ExpectedConditions.elementToBeClickable(By.id("ctl00_ContentPlaceHolder1_btn_go"))
                     );
+                    verifyElement(goBtn, "Print Go Button");
                     js.executeScript("arguments[0].click();", goBtn);
                     Thread.sleep(1000);
 
-                    // 1. Extract Pincode from Place of Dispatch span
+                    // Verify & Extract 'Valid Until' Date Text
+                    WebElement validUntilSpan = wait.until(
+                            ExpectedConditions.visibilityOfElementLocated(By.id("ctl00_ContentPlaceHolder1_lblValidTo"))
+                    );
+                    verifyElement(validUntilSpan, "Valid Until Date Display Span");
+                    String validUntilText = validUntilSpan.getText().trim();
+                    System.out.println("[VERIFY] Extracted 'Valid Until' Date: " + validUntilText);
+
+                    Matcher matcher = Pattern.compile("\\d{2}/\\d{2}/\\d{4}").matcher(validUntilText);
+
+                    if (matcher.find()) {
+                        String extractedDateStr = matcher.group();
+                        LocalDate extractedDate = LocalDate.parse(extractedDateStr, dtf);
+
+                        // CONDITIONAL ROUTING BASED ON VALIDITY
+                        if (extractedDate.isAfter(todayDate)) {
+                            String msg = "Extended (Valid Until: " + extractedDateStr + ")";
+                            remarkCell.setCellValue(msg);
+                            System.out.println("[STATUS: PASS] E-Way bill valid beyond today (" + extractedDateStr + "). Skipped extension.");
+                            continue; // Skip directly to next row
+                        } else if (extractedDate.equals(todayDate)) {
+                            System.out.println("[STATUS: ACTION] Valid TODAY (" + extractedDateStr + ") -> Proceeding to Extend Validity.");
+                        } else if (extractedDate.isBefore(todayDate)) {
+                            System.out.println("[STATUS: EXPIRED] Date is before today (" + extractedDateStr + ") -> Attempting Extension.");
+                        }
+                    } else {
+                        System.err.println("[WARN] Date Regex Match Failed for text: " + validUntilText);
+                    }
+
+                    // Extract Scraped Details needed for form
                     try {
                         WebElement dispatchSpan = wait.until(
                                 ExpectedConditions.visibilityOfElementLocated(By.id("ctl00_ContentPlaceHolder1_lbl_placeDispatc"))
                         );
                         String dispatchText = dispatchSpan.getText().trim();
-
                         Matcher pinMatcher = Pattern.compile("\\d{6}").matcher(dispatchText);
                         if (pinMatcher.find()) {
                             extractedPincode = pinMatcher.group();
                         }
                     } catch (Exception e) {
-                        System.err.println("[WARN] Could not extract Pincode from dispatch section.");
+                        System.err.println("[FAIL] Pincode extraction failed from dispatch element.");
                     }
 
-                    // 2. Extract Vehicle Number AND Last Movement City directly from Vehicle Details Table
                     try {
-                        // Vehicle Number is in Row 2, Column 2 (td[2])
                         WebElement vehicleTd = wait.until(
                                 ExpectedConditions.visibilityOfElementLocated(
                                         By.xpath("//table[@id='ctl00_ContentPlaceHolder1_GVVehicleDetails']//tr[2]/td[2]")
@@ -168,23 +207,21 @@ public class ExtendE_wayBill {
                         );
                         extractedVehicleNo = vehicleTd.getText().trim();
 
-                        // Last Updated "From" City is in Row 2, Column 3 (td[3]) as highlighted in inspector
                         WebElement cityTd = wait.until(
                                 ExpectedConditions.visibilityOfElementLocated(
                                         By.xpath("//table[@id='ctl00_ContentPlaceHolder1_GVVehicleDetails']//tr[2]/td[3]")
                                 )
                         );
                         extractedCity = cityTd.getText().trim();
-
                     } catch (Exception e) {
-                        System.err.println("[WARN] Could not extract City/Vehicle Number from vehicle details table.");
+                        System.err.println("[FAIL] Vehicle Number / City extraction failed from table.");
                     }
 
-                    System.out.println("[ROW " + i + " SCRAPED DATA] City: " + extractedCity + 
-                                       " | Pincode: " + extractedPincode + 
+                    System.out.println("[SCRAPED DATA VERIFIED] City: " + extractedCity +
+                                       " | Pincode: " + extractedPincode +
                                        " | VehicleNo: " + extractedVehicleNo);
 
-                    // ================= STEP 2: NAVIGATE TO EXTEND VALIDITY PAGE =================
+                    // ================= STEP 2: OPEN EXTEND VALIDITY PAGE =================
                     driver.get("https://ewaybillgst.gov.in/MainMenu.aspx");
                     Thread.sleep(1000);
 
@@ -193,23 +230,25 @@ public class ExtendE_wayBill {
                     WebElement ewayBox = wait.until(
                             ExpectedConditions.visibilityOfElementLocated(By.id("ctl00_ContentPlaceHolder1_txt_no"))
                     );
+                    verifyElement(ewayBox, "Extend Validity E-Way Box Input");
                     ewayBox.clear();
                     ewayBox.sendKeys(ewayBill);
 
                     WebElement extendGoButton = wait.until(
                             ExpectedConditions.elementToBeClickable(By.id("ctl00_ContentPlaceHolder1_Btn_go"))
                     );
+                    verifyElement(extendGoButton, "Extend Validity Go Button");
                     extendGoButton.click();
-                    System.out.println("[ROW " + i + "] Clicked 'GO' on Extend Validity page.");
+                    System.out.println("[VERIFY] Clicked 'GO' on Extend Validity page.");
                     Thread.sleep(800);
 
-                    // Check for Alert on GO (e.g. "Already Extended")
+                    // Check for immediate Alert (e.g., Already Extended)
                     try {
                         Alert panelAlert = driver.switchTo().alert();
                         String alertText = panelAlert.getText();
                         panelAlert.accept();
 
-                        System.out.println("[ROW " + i + " ALERT] " + alertText);
+                        System.out.println("[ALERT CAPTURED] " + alertText);
 
                         if (alertText.toLowerCase().contains("already")
                                 || alertText.toLowerCase().contains("extended")
@@ -222,67 +261,68 @@ public class ExtendE_wayBill {
                             continue;
                         }
                     } catch (org.openqa.selenium.NoAlertPresentException e) {
-                        // Form loaded successfully
+                        // Extension form rendered properly
                     }
 
-                    // ================= STEP 3: FILL EXTENSION FORM =================
-                    // Radio button "Yes"
+                    // ================= STEP 3: EXTENSION FORM FILL & VERIFY =================
                     WebElement yesRadio = wait.until(
                             ExpectedConditions.presenceOfElementLocated(By.id("rbn_extent_0"))
                     );
+                    verifyElement(yesRadio, "Extension Radio Button (Yes)");
                     js.executeScript("arguments[0].scrollIntoView(true);", yesRadio);
                     Thread.sleep(100);
                     js.executeScript("arguments[0].click();", yesRadio);
 
-                    // Reason Dropdown -> Transhipment
                     WebElement dropdown = wait.until(
                             ExpectedConditions.visibilityOfElementLocated(By.name("ctl00$ContentPlaceHolder1$ddl_extend"))
                     );
+                    verifyElement(dropdown, "Reason Dropdown Menu");
                     Select select = new Select(dropdown);
                     select.selectByVisibleText("Transhipment");
 
-                    // Remarks Box -> Others
                     WebElement remark = wait.until(
                             ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='Remarks']"))
                     );
+                    verifyElement(remark, "Remarks Text Input");
                     remark.clear();
                     remark.sendKeys("Others");
 
-                    // Current Place (Scraped "From" City from table)
                     WebElement txtPlace = wait.until(
                             ExpectedConditions.visibilityOfElementLocated(By.name("ctl00$ContentPlaceHolder1$txt_vehFromPlace"))
                     );
+                    verifyElement(txtPlace, "From Place Input");
                     txtPlace.clear();
                     txtPlace.sendKeys(extractedCity);
 
-                    // Current Pincode (Scraped Pincode)
                     WebElement txtPin = wait.until(
                             ExpectedConditions.visibilityOfElementLocated(By.name("ctl00$ContentPlaceHolder1$txtFromEnteredPinCode"))
                     );
+                    verifyElement(txtPin, "From Pincode Input");
                     txtPin.clear();
                     txtPin.sendKeys(extractedPincode);
                     Thread.sleep(2000);
 
-                    // Dismiss State/Pin Alert if pop-up appears
+                    // Dismiss State/Pin calculation pop-up if present
                     try {
                         Alert pinAlert = driver.switchTo().alert();
                         pinAlert.accept();
                     } catch (org.openqa.selenium.NoAlertPresentException e) {
                     }
 
-                    // Vehicle Number (Scraped Vehicle Number)
                     WebElement txtVehicle = wait.until(
                             ExpectedConditions.visibilityOfElementLocated(By.name("ctl00$ContentPlaceHolder1$txtVehicleNo"))
                     );
+                    verifyElement(txtVehicle, "Vehicle Number Input");
                     txtVehicle.clear();
                     txtVehicle.sendKeys(extractedVehicleNo);
 
-                    // Submit Extension Form
-                    driver.findElement(By.id("btnsbmt")).click();
-                    System.out.println("[ROW " + i + "] Submitted extension form.");
+                    WebElement submitBtn = driver.findElement(By.id("btnsbmt"));
+                    verifyElement(submitBtn, "Form Submit Button");
+                    submitBtn.click();
+                    System.out.println("[VERIFY] Submitted extension form.");
                     Thread.sleep(500);
 
-                    // ================= STEP 4: DISTANCE ALERT / MODAL HANDLING =================
+                    // ================= STEP 4: DISTANCE MODAL & ALERT VALIDATION =================
                     try {
                         Alert distanceAlert = driver.switchTo().alert();
                         distanceAlert.accept();
@@ -293,12 +333,13 @@ public class ExtendE_wayBill {
                                         By.xpath("//input[contains(@id,'txt_dist') or contains(@id,'txtDistance') or contains(@name,'txt_dist')]")
                                 )
                         );
+                        verifyElement(txtDistance, "Distance Override Input Field");
                         txtDistance.click();
                         txtDistance.sendKeys(Keys.CONTROL + "a");
                         txtDistance.sendKeys(Keys.BACK_SPACE);
                         txtDistance.sendKeys("10");
 
-                        driver.findElement(By.id("btnsbmt")).click();
+                        submitBtn.click();
                         Thread.sleep(500);
 
                     } catch (org.openqa.selenium.NoAlertPresentException e) {
@@ -316,26 +357,26 @@ public class ExtendE_wayBill {
                                                 By.xpath("//input[contains(@id,'txt_dist') or contains(@id,'txtDistance') or contains(@name,'txt_dist')]")
                                         )
                                 );
+                                verifyElement(txtDistance, "Distance Override Modal Input");
                                 txtDistance.click();
                                 txtDistance.sendKeys(Keys.CONTROL + "a");
                                 txtDistance.sendKeys(Keys.BACK_SPACE);
                                 txtDistance.sendKeys("09");
 
-                                driver.findElement(By.id("btnsbmt")).click();
+                                submitBtn.click();
                                 Thread.sleep(500);
                             }
                         } catch (Exception modalEx) {
                         }
                     }
 
-                    // Final alert check after form submission
                     try {
                         Alert finalAlert = driver.switchTo().alert();
                         finalAlert.accept();
                     } catch (Exception alertEx) {
                     }
 
-                    // ================= STEP 5: VERIFY UPDATED DATE VIA PRINT PAGE =================
+                    // ================= STEP 5: FINAL POST-EXTENSION VERIFICATION =================
                     driver.get("https://ewaybillgst.gov.in/MainMenu.aspx");
                     Thread.sleep(1000);
 
@@ -354,38 +395,31 @@ public class ExtendE_wayBill {
                     js.executeScript("arguments[0].click();", verifyGoBtn);
                     Thread.sleep(500);
 
-                    WebElement validUntilSpan = wait.until(
+                    WebElement postValidSpan = wait.until(
                             ExpectedConditions.visibilityOfElementLocated(By.id("ctl00_ContentPlaceHolder1_lblValidTo"))
                     );
 
-                    String validUntilText = validUntilSpan.getText().trim();
-                    System.out.println("[INFO] Extracted 'Valid Until' Date: " + validUntilText);
+                    String postValidText = postValidSpan.getText().trim();
+                    Matcher postMatcher = Pattern.compile("\\d{2}/\\d{2}/\\d{4}").matcher(postValidText);
 
-                    Matcher matcher = Pattern.compile("\\d{2}/\\d{2}/\\d{4}").matcher(validUntilText);
+                    if (postMatcher.find()) {
+                        String finalDateStr = postMatcher.group();
+                        LocalDate finalDate = LocalDate.parse(finalDateStr, dtf);
 
-                    if (matcher.find()) {
-                        String extractedDateStr = matcher.group();
-                        LocalDate extractedDate = LocalDate.parse(extractedDateStr, dtf);
-
-                        if (extractedDate.equals(todayDate)) {
-                            String msg = "Need To Extend (Valid Today: " + extractedDateStr + ")";
-                            remarkCell.setCellValue(msg);
-                            System.out.println("[ROW " + i + " STATUS] " + msg);
-                        } else if (extractedDate.isAfter(todayDate)) {
-                            String msg = "Extended (Valid Until: " + extractedDateStr + ")";
-                            remarkCell.setCellValue(msg);
-                            System.out.println("[ROW " + i + " STATUS] SUCCESS: " + msg);
+                        if (finalDate.isAfter(todayDate)) {
+                            remarkCell.setCellValue("Extended (Valid Until: " + finalDateStr + ")");
+                            System.out.println("[FINAL STATUS: PASS] Bill extended to " + finalDateStr);
+                        } else if (finalDate.equals(todayDate)) {
+                            remarkCell.setCellValue("Need To Extend (Valid Today: " + finalDateStr + ")");
                         } else {
-                            String msg = "Expired (Valid Until: " + extractedDateStr + ")";
-                            remarkCell.setCellValue(msg);
-                            System.out.println("[ROW " + i + " STATUS] WARNING: " + msg);
+                            remarkCell.setCellValue("Expired (Valid Until: " + finalDateStr + ")");
                         }
                     } else {
-                        remarkCell.setCellValue("Unverified Date Format: " + validUntilText);
+                        remarkCell.setCellValue("Unverified Date Format: " + postValidText);
                     }
 
                 } catch (Exception rowException) {
-                    System.err.println("[ROW " + i + " ERROR] Submission failed: " + rowException.getMessage());
+                    System.err.println("[ROW " + i + " FAIL] Processing failed: " + rowException.getMessage());
                     remarkCell.setCellValue("Failed: " + rowException.getMessage());
                 }
             }
@@ -397,17 +431,26 @@ public class ExtendE_wayBill {
                 workbook.write(fos);
                 System.out.println("[INFO] Excel sheet updated successfully.");
             } catch (Exception e) {
-                System.err.println("[WARN] Excel write failed: " + e.getMessage());
+                System.err.println("[FAIL] Excel write failed: " + e.getMessage());
             }
 
             if (workbook != null) workbook.close();
             driver.quit();
-            System.out.println("\n[INFO] ALL E-WAY BILLS PROCESSED. BROWSER CLOSED.");
+            System.out.println("\n[INFO] ALL TEST CASES & E-WAY BILLS PROCESSED. BROWSER CLOSED.");
         }
     }
 
-    // Reliable ASP.NET Menu Navigation Helper
-    private static void clickMenuOption(
+    // Defensive Element Verification Method
+    private static void verifyElement(WebElement element, String elementName) {
+        if (element != null && (element.isDisplayed() || element.isEnabled())) {
+            System.out.println("[ELEMENT CHECK: PASS] " + elementName + " is available and functional.");
+        } else {
+            System.err.println("[ELEMENT CHECK: FAIL] " + elementName + " is missing or disabled.");
+        }
+    }
+
+    // ASP.NET Sub-Menu Navigation Helper
+    private static boolean clickMenuOption(
             WebDriver driver,
             WebDriverWait wait,
             JavascriptExecutor js,
@@ -426,13 +469,20 @@ public class ExtendE_wayBill {
         } catch (Exception ignored) {
         }
 
-        WebElement subMenuItem = wait.until(
-                ExpectedConditions.presenceOfElementLocated(
-                        By.xpath("//a[contains(text(),'" + menuText + "')]")
-                )
-        );
+        try {
+            WebElement subMenuItem = wait.until(
+                    ExpectedConditions.presenceOfElementLocated(
+                            By.xpath("//a[contains(text(),'" + menuText + "')]")
+                    )
+            );
 
-        js.executeScript("arguments[0].click();", subMenuItem);
-        Thread.sleep(1000);
+            verifyElement(subMenuItem, "Sub-Menu Option: " + menuText);
+            js.executeScript("arguments[0].click();", subMenuItem);
+            Thread.sleep(1000);
+            return true;
+        } catch (Exception e) {
+            System.err.println("[FAIL] Menu item not reachable: " + menuText);
+            return false;
+        }
     }
-}
+} 
