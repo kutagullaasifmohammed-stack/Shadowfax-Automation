@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [EWayBill Suite]">
+  <test thread-count="5" name="EWayBill Test(failed)">
+    <classes>
+      <class name="Automation.ExtendE_wayBill">
+        <methods>
+          <include name="processEwayBills"/>
+          <include name="setupEnvironment"/>
+          <include name="tearDown"/>
+          <include name="loginToPortal"/>
+        </methods>
+      </class> <!-- Automation.ExtendE_wayBill -->
+    </classes>
+  </test> <!-- EWayBill Test(failed) -->
+</suite> <!-- Failed suite [EWayBill Suite] -->

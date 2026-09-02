@@ -23,13 +23,20 @@
             <version>4.18.1</version>
         </dependency>
 
+        <!-- TestNG Dependency (Removed scope:test to prevent resolution errors in src/main/java) -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.9.0</version>
+        </dependency>
+
         <!-- Apache POI for Excel handling -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>5.2.5</version>
         </dependency>
-
+        
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -39,13 +46,11 @@
 
     <build>
         <plugins>
+            <!-- Maven Surefire Plugin to execute TestNG suite via Maven/Jenkins -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <mainClass>Automation.ExtendE_wayBill</mainClass>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
             </plugin>
         </plugins>
     </build>
